@@ -36,14 +36,14 @@ public class OrdersBO {
 	}
 
 	public OrdersBO(Orders orders) {
-		this.id = orders.getId();
-		this.status = orders.getStatus();
-		this.productId = orders.getProductId();
-		this.userId = orders.getUserId();
-		this.addressId = orders.getAddressId();
-		this.ordersProducts = orders.getOrdersProducts();
-		this.bills = orders.getBills();
-		this.createdOn = orders.getCreatedOn();
+		id = orders.getId();
+		status = orders.getStatus();
+		productId = orders.getProductId();
+		userId = orders.getUserId();
+		addressId = orders.getAddressId();
+		ordersProducts = orders.getOrdersProducts();
+		bills = orders.getBills();
+		createdOn = orders.getCreatedOn();
 	}
 
 	public int getId() {

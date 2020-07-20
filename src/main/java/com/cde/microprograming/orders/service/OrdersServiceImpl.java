@@ -19,19 +19,19 @@ public class OrdersServiceImpl implements OrdersService {
 	OrdersDAO ordersDAO;
 
 	@Override
-	public Orders createOrder(OrdersBO ordersBO) {
+	public int createOrder(OrdersBO ordersBO) {
 		Orders orders = new Orders(ordersBO);
-		return ordersDAO.save(orders);
+		return ordersDAO.save(orders).getId();
 	}
 
 	@Override
-	public Orders updateOrder(OrdersBO ordersBO) {
+	public void updateOrder(OrdersBO ordersBO) {
 		Optional<Orders> ordersData = ordersDAO.findById(ordersBO.getId());
-		if (!ordersData.isPresent()) {
+		if (!ordersData.isPresent())
 			throw new InventoryNotFoundException("data not found " + ordersBO.getId());
-		}
+		
 		Orders orders = new Orders(ordersBO);
-		return ordersDAO.save(orders);
+		ordersDAO.save(orders);
 	}
 
 	@Override
@@ -51,6 +51,9 @@ public class OrdersServiceImpl implements OrdersService {
 
 	@Override
 	public void deleteOrder(int id) {
+		Optional<Orders> orders = ordersDAO.findById(id);
+		if (!orders.isPresent())
+			throw new InventoryNotFoundException("data not found " + id);
 		ordersDAO.deleteById(id);
 	}
 

@@ -1,98 +1,68 @@
 package com.cde.microprograming.user.model;
 
-import java.util.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import com.cde.microprograming.user.bo.UserBO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
+@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
+
+	public User(UserBO userBO) {
+		id = userBO.getId();
+		userName = userBO.getUserName();
+		password = userBO.getPassword();
+		mobileNumber = userBO.getMobileNumber();
+		age = userBO.getAge();
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@Column(name = "name")
-	private String name;
+	@Column(name = "user_name")
+	private String userName;
 
-	@Column(name = "role")
-	private String role;
+	@Column(name = "password")
+	@JsonIgnore
+	private String password;
 
 	@Column(name = "mobile_number")
-	private int mobileNumber;
+	private String mobileNumber;
 
-	@Column(name = "email")
-	private String email;
+	@Column(name = "age")
+	private int age;
 
-	@Column(name = "created_on")
-	private Date createdOn;
-
-	public User() {
-		super();
-	}
-
-	public User(UserBO userBO) {
-		this.id = userBO.getId();
-		this.name = userBO.getName();
-		this.role = userBO.getRole();
-		this.mobileNumber = userBO.getMobileNumber();
-		this.email = userBO.getEmail();
-		this.createdOn = userBO.getCreatedOn();
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
-
-	public int getMobileNumber() {
-		return mobileNumber;
-	}
-
-	public void setMobileNumber(int mobileNumber) {
-		this.mobileNumber = mobileNumber;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public Date getCreatedOn() {
-		return createdOn;
-	}
-
-	public void setCreatedOn(Date createdOn) {
-		this.createdOn = createdOn;
-	}
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(name = "USER_ROLES", joinColumns = { @JoinColumn(name = "USER_ID") }, inverseJoinColumns = {
+			@JoinColumn(name = "ROLE_ID") })
+	private Set<Role> roles;
 
 }

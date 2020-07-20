@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "product")
+@Table(name = "product_inventory")
 public class ProductInventory {
 
 	@Id
@@ -20,10 +20,6 @@ public class ProductInventory {
 	@Column(name = "type")
 	private String type;
 
-	/*
-	 * @Column(name = "quantity") private Integer quantity;
-	 */
-
 	@Column(name = "raw_material_id")
 	private int rawMaterialId;
 
@@ -32,6 +28,17 @@ public class ProductInventory {
 
 	@Column(name = "created_on")
 	private Date createdOn;
+
+	public ProductInventory(ProductInventory productInventory) {
+		id = productInventory.getId();
+		type = productInventory.getType();
+		rawMaterialId = productInventory.getRawMaterialId();
+		componentId = productInventory.getComponentId();
+		createdOn = productInventory.getCreatedOn();
+	}
+
+	public ProductInventory() {
+	}
 
 	public int getId() {
 		return id;

@@ -1,5 +1,7 @@
 package com.cde.microprograming.user.service;
 
+import java.util.List;
+
 import com.cde.microprograming.user.bo.UserBO;
 import com.cde.microprograming.user.model.User;
 
@@ -12,5 +14,7 @@ public interface UserService {
 	UserBO getUser(int id);
 
 	void deleteUser(int id);
+
+	List<UserBO> getAllUser();
 
 }

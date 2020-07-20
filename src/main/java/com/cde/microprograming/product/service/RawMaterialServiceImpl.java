@@ -23,44 +23,44 @@ public class RawMaterialServiceImpl implements RawMaterialService {
 	RawMaterialDAO rawMaterialDAO;
 
 	@Override
-	public RawMaterial createRawMaterial(RawMaterialBO rawMaterialBO) {
+	public int createRawMaterial(RawMaterialBO rawMaterialBO) {
 		RawMaterial rawMaterial = new RawMaterial(rawMaterialBO);
-		return rawMaterialDAO.save(rawMaterial);
+		return rawMaterialDAO.save(rawMaterial).getId();
 	}
 
 	@Override
 	public RawMaterialBO getRawMaterial(int id) {
-		Optional<RawMaterial> rawMaterial = rawMaterialDAO.findById(id);
-
-		if (!rawMaterial.isPresent()) {
-			LOGGER.info("no data found for given " + id);
-			throw new InventoryNotFoundException("id: " + id);
-		}
-
-		RawMaterial rawMaterialData = rawMaterial.get();
-		return new RawMaterialBO(rawMaterialData);
+		Optional<RawMaterial> rawMaterialOptional = rawMaterialDAO.findById(id);
+		return rawMaterialOptional.map(RawMaterialBO::new).orElse(null);
 	}
 
 	@Override
 	public List<RawMaterialBO> getAllRawMaterials() {
 		List<RawMaterial> rawMaterials = rawMaterialDAO.findAll();
-		return rawMaterials.stream().map(rawMaterial -> new RawMaterialBO(rawMaterial)).collect(Collectors.toList());
+		return rawMaterials.stream().map(RawMaterialBO::new).collect(Collectors.toList());
 	}
 
 	@Override
 	public void deleteRawMaterial(int id) {
+		Optional<RawMaterial> rawMaterial = rawMaterialDAO.findById(id);
+
+		if (!rawMaterial.isPresent()) {
+			LOGGER.error("no data found for given " + id);
+			throw new InventoryNotFoundException("id: " + id);
+		}
+		
 		rawMaterialDAO.deleteById(id);
 	}
 
 	@Override
-	public RawMaterial updateRawMaterial(RawMaterialBO rawMaterialBO) {
+	public void updateRawMaterial(RawMaterialBO rawMaterialBO) {
 		Optional<RawMaterial> rawMaterialData = rawMaterialDAO.findById(rawMaterialBO.getId());
 		if (!rawMaterialData.isPresent()) {
-			LOGGER.info("data found for given " + rawMaterialBO.getId());
+			LOGGER.info("no data found for given ", rawMaterialBO.getId());
 			throw new InventoryNotFoundException("data not found for " + rawMaterialBO.getId());
 		}
 		RawMaterial rawMaterial = new RawMaterial(rawMaterialBO);
-		return rawMaterialDAO.save(rawMaterial);
+		rawMaterialDAO.save(rawMaterial);
 	}
 
 }
