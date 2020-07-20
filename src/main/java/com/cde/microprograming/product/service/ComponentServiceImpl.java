@@ -19,17 +19,16 @@ public class ComponentServiceImpl implements ComponentService {
 	ComponentDAO componentDAO;
 
 	@Override
-	public Component createComponent(ComponentBO componentBO) {
+	public int createComponent(ComponentBO componentBO) {
 		Component component = new Component(componentBO);
-		return componentDAO.save(component);
+		return componentDAO.save(component).getId();
 	}
 
 	@Override
 	public ComponentBO getComponent(int id) {
 		Optional<Component> component = componentDAO.findById(id);
-		if (!component.isPresent()) {
+		if (!component.isPresent()) 
 			throw new InventoryNotFoundException("data not found: " + id);
-		}
 
 		Component componentdata = component.get();
 		return new ComponentBO(componentdata);
@@ -38,22 +37,25 @@ public class ComponentServiceImpl implements ComponentService {
 	@Override
 	public List<ComponentBO> getAllComponents() {
 		List<Component> component = componentDAO.findAll();
-		return component.stream().map(componentData -> new ComponentBO(componentData)).collect(Collectors.toList());
+		return component.stream().map(ComponentBO::new).collect(Collectors.toList());
 	}
 
 	@Override
 	public void deleteComponent(int id) {
+		Optional<Component> component = componentDAO.findById(id);
+		if (!component.isPresent()) 
+			throw new InventoryNotFoundException("data not found: " + id);
 		componentDAO.deleteById(id);
 	}
 
 	@Override
-	public Component updateComponent(ComponentBO componentBO) {
+	public void updateComponent(ComponentBO componentBO) {
 		Optional<Component> componentData = componentDAO.findById(componentBO.getId());
 		if (!componentData.isPresent()) {
 			throw new InventoryNotFoundException("data not found "+componentBO.getId());
 		}
 		Component component = new Component(componentBO);
-		return componentDAO.save(component);
+		componentDAO.save(component);
 	}
 
 }

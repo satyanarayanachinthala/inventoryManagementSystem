@@ -1,69 +1,53 @@
-package com.cde.microprograming.product.model;
+package com.cde.microprograming.product.bo;
 
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import com.cde.microprograming.product.model.Product;
+import com.cde.microprograming.product.model.ProductInventory;
 
-import com.cde.microprograming.product.bo.ProductBO;
+public class ProductBO {
 
-@Entity
-@Table(name = "product")
-public class Product {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
-	@Column(name = "name")
 	private String name;
-
-	@Column(name = "status")
 	private String status;
-
-	@Column(name = "quantity")
 	private int quantity;
-
-	@Column(name = "type")
 	private String type;
-
-	@Column(name = "component_id")
 	private int componentId;
-
-	@Column(name = "raw_material_id")
 	private int rawMaterialId;
-
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "product_id")
 	private List<ProductInventory> productInventories;
-
-	@Column(name = "created_on")
 	private Date createdOn;
 
-	public Product() {
+	public ProductBO() {
 		super();
 	}
 
-	public Product(ProductBO productBO) {
-		id = productBO.getId();
-		name = productBO.getName();
-		status = productBO.getStatus();
-		quantity = productBO.getQuantity();
-		type = productBO.getType();
-		componentId = productBO.getComponentId();
-		rawMaterialId = productBO.getRawMaterialId();
-		this.productInventories = productBO.getProductInventories().stream()
-				.map(productInfo -> new ProductInventory(productInfo)).collect(Collectors.toList());
-		createdOn = productBO.getCreatedOn();
+	public ProductBO(int id, String name, String status, int quantity, String type, int componentId, int rawMaterialId,
+			List<ProductInventory> productInventories, Date createdOn) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.status = status;
+		this.quantity = quantity;
+		this.type = type;
+		this.componentId = componentId;
+		this.rawMaterialId = rawMaterialId;
+		this.productInventories = productInventories;
+		this.createdOn = createdOn;
+	}
+	
+	public ProductBO(Product product) {
+		id = product.getId();
+		name = product.getName();
+		status = product.getStatus();
+		quantity = product.getQuantity();
+		type = product.getType();
+		componentId = product.getComponentId();
+		rawMaterialId = product.getRawMaterialId();
+		productInventories = product.getProductInventories().stream()
+				.map(productInfo -> new ProductInventory(productInfo)).collect(Collectors.toList());;
+		createdOn = product.getCreatedOn();
 	}
 
 	public int getId() {

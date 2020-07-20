@@ -10,5 +10,7 @@ import com.cde.microprograming.user.model.User;
 @Repository
 @Transactional
 public interface UserDAO extends JpaRepository<User, Integer> {
+	
+	User findByUserName(String userName);
 
 }
