@@ -36,7 +36,7 @@ public class ProductBO {
 		this.productInventories = productInventories;
 		this.createdOn = createdOn;
 	}
-	
+
 	public ProductBO(Product product) {
 		id = product.getId();
 		name = product.getName();
@@ -46,7 +46,8 @@ public class ProductBO {
 		componentId = product.getComponentId();
 		rawMaterialId = product.getRawMaterialId();
 		productInventories = product.getProductInventories().stream()
-				.map(productInfo -> new ProductInventory(productInfo)).collect(Collectors.toList());;
+				.map(productInfo -> new ProductInventory(productInfo)).collect(Collectors.toList());
+		;
 		createdOn = product.getCreatedOn();
 	}
 

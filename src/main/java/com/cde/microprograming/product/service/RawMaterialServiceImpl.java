@@ -48,7 +48,7 @@ public class RawMaterialServiceImpl implements RawMaterialService {
 			LOGGER.error("no data found for given " + id);
 			throw new InventoryNotFoundException("id: " + id);
 		}
-		
+
 		rawMaterialDAO.deleteById(id);
 	}
 

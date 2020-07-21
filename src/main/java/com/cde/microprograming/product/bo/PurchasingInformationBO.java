@@ -8,7 +8,7 @@ import com.cde.microprograming.product.model.PurchasingInformation;
 public class PurchasingInformationBO implements Serializable {
 
 	private static final long serialVersionUID = 455082635557164905L;
-	
+
 	private int id;
 	private int user;
 	private int quantity;
@@ -24,7 +24,7 @@ public class PurchasingInformationBO implements Serializable {
 		this.id = purchasingInformation.getId();
 		this.user = purchasingInformation.getUser();
 	}
-	
+
 	public PurchasingInformationBO(int id, int user, int quantity, double price, String purchasedFrom, Date createdOn) {
 		super();
 		this.id = id;

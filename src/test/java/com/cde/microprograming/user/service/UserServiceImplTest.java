@@ -4,8 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,10 +16,13 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.cde.microprograming.exception.InventoryNotFoundException;
 import com.cde.microprograming.user.bo.UserBO;
 import com.cde.microprograming.user.dao.UserDAO;
+import com.cde.microprograming.user.model.Role;
 import com.cde.microprograming.user.model.User;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -64,6 +69,12 @@ public class UserServiceImplTest {
 		when(userDAO.findById(1)).thenReturn(Optional.of(user));
 		assertEquals("admin", userServiceImpl.getUser(1).getUserName());
 	}
+	
+	@Test(expected = InventoryNotFoundException.class)
+	public void testGetUserException() {
+		when(userDAO.findById(2)).thenReturn(Optional.empty());
+		userServiceImpl.getUser(2);
+	}
 
 	@Test
 	public void testGetAllUsers() {
@@ -77,6 +88,25 @@ public class UserServiceImplTest {
 	public void testDeleteUser() {
 		userServiceImpl.deleteUser(13);
 		assertEquals("admin", user.getUserName());
+	}
+	
+	@Test(expected = UsernameNotFoundException.class)
+	public void testLoadUserByUsernameException() {
+		when(userDAO.findByUserName("admin")).thenReturn(null);
+		userServiceImpl.loadUserByUsername("admin");
+	}
+	
+	@Test
+	public void testLoadUserByUsername() {
+		Role role = new Role();
+		role.setId(1);
+		role.setName("admin");
+		role.setDescription("admin operations");
+		Set<Role> roles = new HashSet<Role>();
+		roles.add(role);
+		user.setRoles(roles);
+		when(userDAO.findByUserName("admin")).thenReturn(user);
+		assertEquals("admin", userServiceImpl.loadUserByUsername("admin").getUsername());
 	}
 
 }
