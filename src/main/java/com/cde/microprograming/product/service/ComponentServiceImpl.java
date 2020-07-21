@@ -27,7 +27,7 @@ public class ComponentServiceImpl implements ComponentService {
 	@Override
 	public ComponentBO getComponent(int id) {
 		Optional<Component> component = componentDAO.findById(id);
-		if (!component.isPresent()) 
+		if (!component.isPresent())
 			throw new InventoryNotFoundException("data not found: " + id);
 
 		Component componentdata = component.get();
@@ -43,7 +43,7 @@ public class ComponentServiceImpl implements ComponentService {
 	@Override
 	public void deleteComponent(int id) {
 		Optional<Component> component = componentDAO.findById(id);
-		if (!component.isPresent()) 
+		if (!component.isPresent())
 			throw new InventoryNotFoundException("data not found: " + id);
 		componentDAO.deleteById(id);
 	}
@@ -52,7 +52,7 @@ public class ComponentServiceImpl implements ComponentService {
 	public void updateComponent(ComponentBO componentBO) {
 		Optional<Component> componentData = componentDAO.findById(componentBO.getId());
 		if (!componentData.isPresent()) {
-			throw new InventoryNotFoundException("data not found "+componentBO.getId());
+			throw new InventoryNotFoundException("data not found " + componentBO.getId());
 		}
 		Component component = new Component(componentBO);
 		componentDAO.save(component);

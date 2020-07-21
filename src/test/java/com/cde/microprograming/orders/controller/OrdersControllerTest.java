@@ -28,10 +28,10 @@ import com.cde.microprograming.orders.model.Bills;
 import com.cde.microprograming.orders.model.Orders;
 import com.cde.microprograming.orders.model.OrdersProduct;
 import com.cde.microprograming.orders.service.OrdersService;
-import com.cde.microprograming.product.controller.RawMaterialController;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(MockitoJUnitRunner.class)
-@WebMvcTest(controllers = RawMaterialController.class)
+@WebMvcTest(controllers = OrdersController.class)
 @WithMockUser
 public class OrdersControllerTest {
 
@@ -88,6 +88,14 @@ public class OrdersControllerTest {
 	}
 
 	@Test
+	public void testGetOrderException() throws Exception {
+		when(ordersService.getOrder(2)).thenReturn(null);
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/order/2").accept(MediaType.APPLICATION_JSON);
+		MvcResult result = mvc.perform(requestBuilder).andReturn();
+		assertNotNull(result.getResponse());
+	}
+
+	@Test
 	public void testGetOrders() throws Exception {
 		List<OrdersBO> ordersBOList = new ArrayList<OrdersBO>();
 		ordersBOList.add(ordersBO);
@@ -98,16 +106,37 @@ public class OrdersControllerTest {
 	}
 
 	@Test
+	public void testCreateOrderException() throws Exception {
+		ObjectMapper obj = new ObjectMapper();
+		String data = obj.writeValueAsString(ordersBO);
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/order").accept(MediaType.APPLICATION_JSON)
+				.content(data).contentType(MediaType.APPLICATION_JSON);
+		MvcResult result = mvc.perform(requestBuilder).andReturn();
+		assertNotNull(result.getResponse());
+	}
+
+	@Test
 	public void testCreateOrder() throws Exception {
-		//when(ordersService.createOrder(ordersBO)).thenReturn(1);
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/order").accept(MediaType.APPLICATION_JSON).content("/order").contentType(MediaType.APPLICATION_JSON);
+		ordersBO.setId(0);
+		ObjectMapper obj = new ObjectMapper();
+		String data = obj.writeValueAsString(ordersBO);
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/order").accept(MediaType.APPLICATION_JSON)
+				.content(data).contentType(MediaType.APPLICATION_JSON);
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 		assertNotNull(result.getResponse());
 	}
 
 	@Test
 	public void testupdateOrder() throws Exception {
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/order").accept(MediaType.APPLICATION_JSON);
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/order/1").accept(MediaType.APPLICATION_JSON)
+				.content(ordersBO.toString()).contentType(MediaType.APPLICATION_JSON);
+		MvcResult result = mvc.perform(requestBuilder).andReturn();
+		assertNotNull(result.getResponse());
+	}
+
+	@Test
+	public void testDeleteOrder() throws Exception {
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/order/1").accept(MediaType.APPLICATION_JSON);
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 		assertNotNull(result.getResponse());
 	}

@@ -1,9 +1,9 @@
 package com.cde.microprograming.orders.bo;
 
 public class IdResponseBO {
-	
+
 	private int id;
-	
+
 	public IdResponseBO(int id) {
 		this.setId(id);
 	}

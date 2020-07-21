@@ -9,7 +9,7 @@ public interface UserService {
 
 	User createUser(UserBO userBO);
 
-	User UpdateUser(UserBO userBO);
+	User updateUser(UserBO userBO);
 
 	UserBO getUser(int id);
 

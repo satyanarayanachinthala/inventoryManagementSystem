@@ -1,6 +1,7 @@
 package com.cde.microprograming.product.controller;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,35 +15,40 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.cde.microprograming.product.bo.PurchasingInformationBO;
 import com.cde.microprograming.product.bo.RawMaterialBO;
 import com.cde.microprograming.product.model.PurchasingInformation;
 import com.cde.microprograming.product.model.RawMaterial;
 import com.cde.microprograming.product.service.RawMaterialService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(MockitoJUnitRunner.class)
-@WebMvcTest(RawMaterialController.class)
-class RawMaterialControllerTest {
-
-	@InjectMocks
-	RawMaterialController rawMaterialController;
+@WebMvcTest(controllers = RawMaterialController.class)
+@WithMockUser
+public class RawMaterialControllerTest {
 
 	@Mock
 	RawMaterialService rawMaterialService;
 
-	protected MockMvc mvc;
+	@InjectMocks
+	RawMaterialController rawMaterialController;
+
+	@Autowired
+	public MockMvc mvc;
 
 	@Autowired
 	WebApplicationContext webApplicationContext;
 
-	protected void setUp() {
-		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+	@Before
+	public void setUp() {
+		mvc = MockMvcBuilders.standaloneSetup(rawMaterialController).build();
 	}
 
 	RawMaterial rawMaterial;
@@ -65,35 +71,72 @@ class RawMaterialControllerTest {
 
 		rawMaterial.setPurchasingInformations(purchasingInformations);
 
-		rawMaterialBO = new RawMaterialBO();
-
-		rawMaterialBO.setId(1);
-		rawMaterialBO.setName("glass");
-		rawMaterialBO.setQuantity(2);
-		rawMaterialBO.setAvailableQuantity(2);
-		PurchasingInformationBO purchasingInformationBO = new PurchasingInformationBO();
-		purchasingInformationBO.setId(1);
-		purchasingInformationBO.setPrice(100);
-		purchasingInformationBO.setPurchasedFrom("data");
-		purchasingInformationBO.setQuantity(2);
-		List<PurchasingInformationBO> purchasingInformationBOs = new ArrayList<PurchasingInformationBO>();
-		purchasingInformationBOs.add(purchasingInformationBO);
-
-		rawMaterialBO.setPurchasingInformations(purchasingInformationBOs);
-
+		rawMaterialBO = new RawMaterialBO(rawMaterial);
 	}
 
 	@Test
-	public void testGetRawMaterial() throws Exception {
-		String uri = "/products";
-		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri).accept(MediaType.APPLICATION_JSON_VALUE))
-				.andReturn();
+	public void testRawMaterial() throws Exception {
+		when(rawMaterialService.getRawMaterial(1)).thenReturn(rawMaterialBO);
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/rawMaterial/1").accept(MediaType.APPLICATION_JSON);
+		MvcResult result = mvc.perform(requestBuilder).andReturn();
+		assertNotNull(result.getResponse());
+	}
 
-		int status = mvcResult.getResponse().getStatus();
-		assertEquals(200, status);
+	@Test
+	public void testGetrawMaterailException() throws Exception {
+		when(rawMaterialService.getRawMaterial(2)).thenReturn(null);
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/rawMaterial/2").accept(MediaType.APPLICATION_JSON);
+		MvcResult result = mvc.perform(requestBuilder).andReturn();
+		assertNotNull(result.getResponse());
+	}
 
-//		when(rawMaterialService.getRawMaterial(1)).thenReturn(rawMaterialBO);
-//		assertEquals("glass", rawMaterialController.getRawMaterial(1));
+	@Test
+	public void testGetRawMaterials() throws Exception {
+		List<RawMaterialBO> rawMaterialBOList = new ArrayList<RawMaterialBO>();
+		rawMaterialBOList.add(rawMaterialBO);
+		when(rawMaterialService.getAllRawMaterials()).thenReturn(rawMaterialBOList);
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/rawMaterial").accept(MediaType.APPLICATION_JSON);
+		MvcResult result = mvc.perform(requestBuilder).andReturn();
+		assertNotNull(result.getResponse());
+	}
+
+	@Test
+	public void testCreateRawMaterialException() throws Exception {
+		ObjectMapper obj = new ObjectMapper();
+		String data = obj.writeValueAsString(rawMaterialBO);
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/rawMaterial").accept(MediaType.APPLICATION_JSON)
+				.content(data).contentType(MediaType.APPLICATION_JSON);
+		MvcResult result = mvc.perform(requestBuilder).andReturn();
+		assertNotNull(result.getResponse());
+	}
+
+	@Test
+	public void testCreateRawMaterial() throws Exception {
+		rawMaterialBO.setId(0);
+		ObjectMapper obj = new ObjectMapper();
+		String data = obj.writeValueAsString(rawMaterialBO);
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/rawMaterial").accept(MediaType.APPLICATION_JSON)
+				.content(data).contentType(MediaType.APPLICATION_JSON);
+		MvcResult result = mvc.perform(requestBuilder).andReturn();
+		assertNotNull(result.getResponse());
+	}
+
+	@Test
+	public void testUpdateRawmaterial() throws Exception {
+		ObjectMapper obj = new ObjectMapper();
+		String data = obj.writeValueAsString(rawMaterialBO);
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/rawMaterial/1").accept(MediaType.APPLICATION_JSON)
+				.content(data).contentType(MediaType.APPLICATION_JSON);
+		MvcResult result = mvc.perform(requestBuilder).andReturn();
+		assertNotNull(result.getResponse());
+	}
+
+	@Test
+	public void testDeleteRawmaterial() throws Exception {
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/rawMaterial/1")
+				.accept(MediaType.APPLICATION_JSON);
+		MvcResult result = mvc.perform(requestBuilder).andReturn();
+		assertNotNull(result.getResponse());
 	}
 
 }

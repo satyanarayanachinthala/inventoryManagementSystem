@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	@Override
-	public User UpdateUser(UserBO userBO) {
+	public User updateUser(UserBO userBO) {
 		User user = new User(userBO);
 		return userDAO.save(user);
 	}

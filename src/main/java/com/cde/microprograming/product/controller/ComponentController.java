@@ -31,7 +31,7 @@ public class ComponentController {
 		if (componentBO.getId() == 0) {
 			int id = componentService.createComponent(componentBO);
 			return ResponseEntity.accepted().body(new IdResponseBO(id));
-		} 
+		}
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "data already present");
 	}
 

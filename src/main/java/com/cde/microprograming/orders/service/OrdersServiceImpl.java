@@ -29,7 +29,7 @@ public class OrdersServiceImpl implements OrdersService {
 		Optional<Orders> ordersData = ordersDAO.findById(ordersBO.getId());
 		if (!ordersData.isPresent())
 			throw new InventoryNotFoundException("data not found " + ordersBO.getId());
-		
+
 		Orders orders = new Orders(ordersBO);
 		ordersDAO.save(orders);
 	}
