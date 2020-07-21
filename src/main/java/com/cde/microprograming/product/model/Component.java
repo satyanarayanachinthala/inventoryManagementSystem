@@ -54,7 +54,7 @@ public class Component {
 		this.quantity = componentBO.getQuantity();
 		this.availableQuantity = componentBO.getAvailableQuantity();
 		this.purchasingInformations = componentBO.getPurchasingInformations().stream()
-				.map(purchasingInfo -> new PurchasingInformation(purchasingInfo)).collect(Collectors.toList());
+				.map(PurchasingInformation::new).collect(Collectors.toList());
 		this.createdOn = componentBO.getCreatedOn();
 		this.lastModifiedOn = componentBO.getLastModifiedOn();
 	}

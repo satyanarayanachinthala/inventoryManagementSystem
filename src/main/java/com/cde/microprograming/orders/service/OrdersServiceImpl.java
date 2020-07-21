@@ -46,7 +46,7 @@ public class OrdersServiceImpl implements OrdersService {
 	@Override
 	public List<OrdersBO> getOrders() {
 		List<Orders> orders = ordersDAO.findAll();
-		return orders.stream().map(ordersData -> new OrdersBO(ordersData)).collect(Collectors.toList());
+		return orders.stream().map(OrdersBO::new).collect(Collectors.toList());
 	}
 
 	@Override
