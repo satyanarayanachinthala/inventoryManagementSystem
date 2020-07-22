@@ -25,20 +25,6 @@ public class RawMaterialBO implements Serializable {
 		super();
 	}
 
-	public RawMaterialBO(int id, int user, String name, String type, int quantity, int availableQuantity,
-			List<PurchasingInformationBO> purchasingInformations, Date createdOn, Date lastModifiedOn) {
-		super();
-		this.id = id;
-		this.user = user;
-		this.name = name;
-		this.type = type;
-		this.quantity = quantity;
-		this.availableQuantity = availableQuantity;
-		this.purchasingInformations = purchasingInformations;
-		this.createdOn = createdOn;
-		this.lastModifiedOn = lastModifiedOn;
-	}
-
 	public RawMaterialBO(RawMaterial rawMaterial) {
 		this.id = rawMaterial.getId();
 		this.user = rawMaterial.getUser();
@@ -47,7 +33,7 @@ public class RawMaterialBO implements Serializable {
 		this.quantity = rawMaterial.getQuantity();
 		this.availableQuantity = rawMaterial.getAvailableQuantity();
 		this.purchasingInformations = rawMaterial.getPurchasingInformations().stream()
-				.map(purchasingInfo -> new PurchasingInformationBO(purchasingInfo)).collect(Collectors.toList());
+				.map(PurchasingInformationBO::new).collect(Collectors.toList());
 		this.createdOn = rawMaterial.getCreatedOn();
 		this.lastModifiedOn = rawMaterial.getLastModifiedOn();
 	}

@@ -64,7 +64,7 @@ public class RawMaterial {
 		this.createdOn = rawMaterialBO.getCreatedOn();
 		this.lastModifiedOn = rawMaterialBO.getLastModifiedOn();
 		this.purchasingInformations = rawMaterialBO.getPurchasingInformations().stream()
-				.map(purchasingInfo -> new PurchasingInformation(purchasingInfo)).collect(Collectors.toList());
+				.map(PurchasingInformation::new).collect(Collectors.toList());
 	}
 
 	public int getId() {

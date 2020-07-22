@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -64,11 +65,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	@Override
 	public List<UserBO> getAllUser() {
 		List<User> users = userDAO.findAll();
-		return users.stream().map(user -> new UserBO(user)).collect(Collectors.toList());
+		return users.stream().map(UserBO::new).collect(Collectors.toList());
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String username) {
 		User user = userDAO.findByUserName(username);
 		if (user == null) {
 			throw new UsernameNotFoundException("Invalid username or password.");
@@ -77,11 +78,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 				getAuthority(user));
 	}
 
-	private Set getAuthority(User user) {
-		Set authorities = new HashSet<>();
-		user.getRoles().forEach(role -> {
-			authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
-		});
+	private Set<GrantedAuthority> getAuthority(User user) {
+		Set<GrantedAuthority> authorities = new HashSet<>();
+		user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName())));
 		return authorities;
 	}
 

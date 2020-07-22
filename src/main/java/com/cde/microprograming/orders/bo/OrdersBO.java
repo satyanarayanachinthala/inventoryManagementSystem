@@ -22,19 +22,6 @@ public class OrdersBO {
 		super();
 	}
 
-	public OrdersBO(int id, String status, int productId, int userId, int addressId, List<OrdersProduct> ordersProducts,
-			Bills bills, Date createdOn) {
-		super();
-		this.id = id;
-		this.status = status;
-		this.productId = productId;
-		this.userId = userId;
-		this.addressId = addressId;
-		this.ordersProducts = ordersProducts;
-		this.bills = bills;
-		this.createdOn = createdOn;
-	}
-
 	public OrdersBO(Orders orders) {
 		id = orders.getId();
 		status = orders.getStatus();

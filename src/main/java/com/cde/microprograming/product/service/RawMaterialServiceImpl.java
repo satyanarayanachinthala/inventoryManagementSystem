@@ -45,8 +45,8 @@ public class RawMaterialServiceImpl implements RawMaterialService {
 		Optional<RawMaterial> rawMaterial = rawMaterialDAO.findById(id);
 
 		if (!rawMaterial.isPresent()) {
-			LOGGER.error("no data found for given " + id);
-			throw new InventoryNotFoundException("id: " + id);
+			LOGGER.error("no data found for given %d", id);
+			throw new InventoryNotFoundException("data not found for " + id);
 		}
 
 		rawMaterialDAO.deleteById(id);

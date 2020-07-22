@@ -62,7 +62,7 @@ public class Product {
 		componentId = productBO.getComponentId();
 		rawMaterialId = productBO.getRawMaterialId();
 		this.productInventories = productBO.getProductInventories().stream()
-				.map(productInfo -> new ProductInventory(productInfo)).collect(Collectors.toList());
+				.map(ProductInventory::new).collect(Collectors.toList());
 		createdOn = productBO.getCreatedOn();
 	}
 

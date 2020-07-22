@@ -24,19 +24,6 @@ public class ComponentBO implements Serializable {
 		super();
 	}
 
-	public ComponentBO(int id, int user, String name, int quantity, int availableQuantity,
-			List<PurchasingInformationBO> purchasingInformations, Date createdOn, Date lastModifiedOn) {
-		super();
-		this.id = id;
-		this.user = user;
-		this.name = name;
-		this.quantity = quantity;
-		this.availableQuantity = availableQuantity;
-		this.purchasingInformations = purchasingInformations;
-		this.createdOn = createdOn;
-		this.lastModifiedOn = lastModifiedOn;
-	}
-
 	public ComponentBO(Component component) {
 		this.id = component.getId();
 		this.user = component.getUser();
@@ -44,7 +31,7 @@ public class ComponentBO implements Serializable {
 		this.quantity = component.getQuantity();
 		this.availableQuantity = component.getAvailableQuantity();
 		this.purchasingInformations = component.getPurchasingInformations().stream()
-				.map(purchasingInfo -> new PurchasingInformationBO(purchasingInfo)).collect(Collectors.toList());
+				.map(PurchasingInformationBO::new).collect(Collectors.toList());
 		this.createdOn = component.getCreatedOn();
 		this.lastModifiedOn = component.getLastModifiedOn();
 	}
