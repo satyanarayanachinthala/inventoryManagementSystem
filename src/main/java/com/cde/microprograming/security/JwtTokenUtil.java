@@ -27,7 +27,7 @@ public class JwtTokenUtil implements Serializable {
 	private static final long serialVersionUID = 7360173864026078224L;
 	
 	private static final String AUTHORITIES_KEY = "authorities";
-	private static final long ACCESS_TOKEN_VALIDITY_SECONDS = 5 * 60 * 60;
+	private static final long ACCESS_TOKEN_VALIDITY_SECONDS = (long) 5 * 60 * 60;
 
 	@Value("${jwt.secret}")
 	private String secret;
@@ -47,9 +47,9 @@ public class JwtTokenUtil implements Serializable {
 
 		final Jws<Claims> claimsJws = jwtParser.parseClaimsJws(token);
 
-		final Claims claims = (Claims) claimsJws.getBody();
+		final Claims claims = claimsJws.getBody();
 
-		final Collection authorities = Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+		final Collection<GrantedAuthority> authorities = Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
 				.map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
 		return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
@@ -68,7 +68,7 @@ public class JwtTokenUtil implements Serializable {
 		return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
 	}
 
-	public Boolean validateToken(String token, UserDetails userDetails) {
+	public boolean validateToken(String token, UserDetails userDetails) {
 		final String username = getUsernameFromToken(token);
 		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
 	}

@@ -23,20 +23,6 @@ public class ProductBO {
 		super();
 	}
 
-	public ProductBO(int id, String name, String status, int quantity, String type, int componentId, int rawMaterialId,
-			List<ProductInventory> productInventories, Date createdOn) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.status = status;
-		this.quantity = quantity;
-		this.type = type;
-		this.componentId = componentId;
-		this.rawMaterialId = rawMaterialId;
-		this.productInventories = productInventories;
-		this.createdOn = createdOn;
-	}
-
 	public ProductBO(Product product) {
 		id = product.getId();
 		name = product.getName();
@@ -46,8 +32,7 @@ public class ProductBO {
 		componentId = product.getComponentId();
 		rawMaterialId = product.getRawMaterialId();
 		productInventories = product.getProductInventories().stream()
-				.map(productInfo -> new ProductInventory(productInfo)).collect(Collectors.toList());
-		;
+				.map(ProductInventory::new).collect(Collectors.toList());
 		createdOn = product.getCreatedOn();
 	}
 

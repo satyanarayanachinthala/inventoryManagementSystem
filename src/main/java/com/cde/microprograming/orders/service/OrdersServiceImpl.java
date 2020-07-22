@@ -14,6 +14,8 @@ import com.cde.microprograming.orders.model.Orders;
 
 @Service
 public class OrdersServiceImpl implements OrdersService {
+	
+	private static final String DATA_NOT_FOUND = "data not found";
 
 	@Autowired
 	OrdersDAO ordersDAO;
@@ -28,7 +30,7 @@ public class OrdersServiceImpl implements OrdersService {
 	public void updateOrder(OrdersBO ordersBO) {
 		Optional<Orders> ordersData = ordersDAO.findById(ordersBO.getId());
 		if (!ordersData.isPresent())
-			throw new InventoryNotFoundException("data not found " + ordersBO.getId());
+			throw new InventoryNotFoundException(DATA_NOT_FOUND + ordersBO.getId());
 
 		Orders orders = new Orders(ordersBO);
 		ordersDAO.save(orders);
@@ -38,7 +40,7 @@ public class OrdersServiceImpl implements OrdersService {
 	public OrdersBO getOrder(int id) {
 		Optional<Orders> orders = ordersDAO.findById(id);
 		if (!orders.isPresent()) {
-			throw new InventoryNotFoundException("data not found " + id);
+			throw new InventoryNotFoundException(DATA_NOT_FOUND + id);
 		}
 		return new OrdersBO(orders.get());
 	}
@@ -53,7 +55,7 @@ public class OrdersServiceImpl implements OrdersService {
 	public void deleteOrder(int id) {
 		Optional<Orders> orders = ordersDAO.findById(id);
 		if (!orders.isPresent())
-			throw new InventoryNotFoundException("data not found " + id);
+			throw new InventoryNotFoundException(DATA_NOT_FOUND + id);
 		ordersDAO.deleteById(id);
 	}
 

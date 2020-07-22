@@ -24,9 +24,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
 
 @RestController
-@Api(value = "rawmaterial", description = "raw material information")
+@Api(value = "rawmaterial", authorizations = {@Authorization("Bearer")})
 public class RawMaterialController {
 
 	@Autowired
